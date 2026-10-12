@@ -1,45 +1,40 @@
 import { StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
-import { colors, fonts, radius, spacing } from '../theme';
+import { colors, spacing } from '../theme';
 
 type Props = {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'outline';
+  outline?: boolean;
   style?: StyleProp<ViewStyle>;
 };
 
-export default function AppButton({ title, onPress, variant = 'primary', style }: Props) {
-  const isPrimary = variant === 'primary';
-
+// Black filled button by default, or an outlined button when `outline` is set.
+export default function AppButton({ title, onPress, outline = false, style }: Props) {
   return (
     <TouchableOpacity
-      activeOpacity={0.7}
       onPress={onPress}
-      accessibilityRole="button"
-      style={[styles.base, isPrimary ? styles.primary : styles.outline, style]}
+      style={[styles.button, outline ? styles.outline : styles.filled, style]}
     >
-      <Text style={[styles.label, { color: isPrimary ? colors.onPrimary : colors.text }]}>
-        {title}
-      </Text>
+      <Text style={[styles.label, { color: outline ? colors.text : '#FFFFFF' }]}>{title}</Text>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  base: {
+  button: {
     paddingVertical: spacing.md,
-    borderRadius: radius.sm,
+    borderRadius: 8,
     alignItems: 'center',
   },
-  primary: {
-    backgroundColor: colors.primary,
+  filled: {
+    backgroundColor: colors.text,
   },
   outline: {
     borderWidth: 1,
     borderColor: colors.text,
   },
   label: {
-    fontFamily: fonts.medium,
     fontSize: 16,
+    fontWeight: '500',
   },
 });
