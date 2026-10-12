@@ -1,13 +1,16 @@
-export const COURSES = ['Starters', 'Mains', 'Dessert'] as const;
-
-export type Course = (typeof COURSES)[number];
+export const COURSES = ['Starters', 'Mains', 'Dessert'];
 
 export type MenuItem = {
   id: string;
   name: string;
   description: string;
-  course: Course;
+  course: string;
   price: number;
 };
 
-export type Role = 'chef' | 'guest';
+// The screens in the app and the data each one receives when navigated to.
+export type RootStackParamList = {
+  Welcome: undefined;
+  Home: { role: 'chef' | 'guest' };
+  ManageMenu: undefined;
+};
