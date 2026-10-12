@@ -1,40 +1,41 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AppButton from '../components/AppButton';
 import EmptyState from '../components/EmptyState';
 import MenuItemRow from '../components/MenuItemRow';
-import { ScreenProps } from '../navigation/types';
-import { useMenu } from '../state/MenuContext';
-import { colors, fonts, spacing } from '../theme';
+import { colors, spacing } from '../theme';
+import { MenuItem, RootStackParamList } from '../types';
 
-export default function HomeScreen({ navigation, route }: ScreenProps<'Home'>) {
-  const { menuItems } = useMenu();
+type Props = NativeStackScreenProps<RootStackParamList, 'Home'> & {
+  menuItems: MenuItem[];
+};
+
+export default function HomeScreen({ navigation, route, menuItems }: Props) {
   const isChef = route.params.role === 'chef';
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Tonight's Menu</Text>
-        <Text style={styles.count}>Total items on the menu: {menuItems.length}</Text>
-      </View>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Tonight's Menu</Text>
+      <Text style={styles.count}>Total items on the menu: {menuItems.length}</Text>
 
       <FlatList
         data={menuItems}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <MenuItemRow item={item} />}
-        contentContainerStyle={styles.list}
         ListEmptyComponent={
           <EmptyState
             title="No dishes yet"
             message={
               isChef
                 ? 'Tap "Manage Menu" to add your first dish.'
-                : 'The chef has not added any dishes yet. Check back soon.'
+                : 'The chef has not added any dishes yet.'
             }
           />
         }
       />
 
+      {/* Only the chef can add dishes */}
       {isChef && (
         <View style={styles.footer}>
           <AppButton title="Manage Menu" onPress={() => navigation.navigate('ManageMenu')} />
@@ -45,32 +46,24 @@ export default function HomeScreen({ navigation, route }: ScreenProps<'Home'>) {
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  container: {
     flex: 1,
+    paddingHorizontal: spacing.lg,
     backgroundColor: colors.background,
   },
-  header: {
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
-  },
   title: {
-    fontFamily: fonts.heading,
     fontSize: 32,
+    fontWeight: '600',
     color: colors.text,
+    marginTop: spacing.md,
   },
   count: {
-    fontFamily: fonts.regular,
     fontSize: 14,
     color: colors.muted,
     marginTop: spacing.xs,
-  },
-  list: {
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.lg,
-    flexGrow: 1,
+    marginBottom: spacing.sm,
   },
   footer: {
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.md,
+    paddingVertical: spacing.md,
   },
 });
