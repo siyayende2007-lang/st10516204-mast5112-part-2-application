@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "st10516204-mast5112-part-2-application",
+    "name": "Chef Christoffel",
     "slug": "st10516204-mast5112-part-2-application",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,6 +20,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }
